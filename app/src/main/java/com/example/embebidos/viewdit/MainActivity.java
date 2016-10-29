@@ -17,12 +17,15 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import static android.os.Environment.DIRECTORY_PICTURES;
+import static android.os.Environment.getExternalStoragePublicDirectory;
+
 public class MainActivity extends AppCompatActivity{
 
     private static final int REQUEST_IMAGE_CAPTURE = 1;
     private Button cameraButton;
     private ImageView photoView;
-    protected String currentPhotoPath;
+    public String currentPhotoPath;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +43,7 @@ public class MainActivity extends AppCompatActivity{
             try {
                 photoFile = createImageFile();
             } catch (IOException ioE) {
-
+                //
             }
             if (photoFile != null) {
                 Uri photoURI = FileProvider.getUriForFile(this,
@@ -51,13 +54,15 @@ public class MainActivity extends AppCompatActivity{
                 //galleryAddPic();
                 //setPic();
             }
+            //setPic();
         }
     }
 
     protected File createImageFile() throws IOException {
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         String imageFileName = "JPEG_" + timeStamp + "_";
-        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES); //solo para la aplicacion
+        File storageDir = getExternalStoragePublicDirectory(DIRECTORY_PICTURES);
+                //getExternalFilesDir(Environment.DIRECTORY_PICTURES); //solo para la aplicacion
         File image = File.createTempFile(
                 imageFileName,  // prefix
                 ".jpg",         // suffix
@@ -65,10 +70,11 @@ public class MainActivity extends AppCompatActivity{
         );
 
         currentPhotoPath = "file:" + image.getAbsolutePath();
+        galleryAddPic();
         return image;
     }
 
-    /*private void galleryAddPic() {
+    private void galleryAddPic() {
         Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
         File fileN = new File(currentPhotoPath);
         Uri contentUri = Uri.fromFile(fileN);
@@ -77,7 +83,11 @@ public class MainActivity extends AppCompatActivity{
     }
 
     private void setPic() {
-        // Get the dimensions of the View
+        BitmapFactory.Options bmOptions = new BitmapFactory.Options();
+        bmOptions.inJustDecodeBounds = true;
+        Bitmap bitmap = BitmapFactory.decodeFile(currentPhotoPath, bmOptions);
+        photoView.setImageBitmap(bitmap);
+       /* // Get the dimensions of the View
         int targetW = photoView.getWidth();
         int targetH = photoView.getHeight();
 
@@ -97,7 +107,6 @@ public class MainActivity extends AppCompatActivity{
         bmOptions.inPurgeable = true;
 
         Bitmap bitmap = BitmapFactory.decodeFile(currentPhotoPath, bmOptions);
-        photoView.setImageBitmap(bitmap);
-    }*/
-
+        photoView.setImageBitmap(bitmap);*/
+    }
 }
