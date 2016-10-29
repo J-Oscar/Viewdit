@@ -17,15 +17,12 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import static android.os.Environment.DIRECTORY_PICTURES;
-import static android.os.Environment.getExternalStoragePublicDirectory;
-
 public class MainActivity extends AppCompatActivity{
 
     private static final int REQUEST_IMAGE_CAPTURE = 1;
     private Button cameraButton;
     private ImageView photoView;
-    public String currentPhotoPath;
+    protected String currentPhotoPath;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,8 +58,7 @@ public class MainActivity extends AppCompatActivity{
     protected File createImageFile() throws IOException {
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         String imageFileName = "JPEG_" + timeStamp + "_";
-        File storageDir = getExternalStoragePublicDirectory(DIRECTORY_PICTURES);
-                //getExternalFilesDir(Environment.DIRECTORY_PICTURES); //solo para la aplicacion
+        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES); //solo para la aplicacion
         File image = File.createTempFile(
                 imageFileName,  // prefix
                 ".jpg",         // suffix
@@ -83,11 +79,7 @@ public class MainActivity extends AppCompatActivity{
     }
 
     private void setPic() {
-        BitmapFactory.Options bmOptions = new BitmapFactory.Options();
-        bmOptions.inJustDecodeBounds = true;
-        Bitmap bitmap = BitmapFactory.decodeFile(currentPhotoPath, bmOptions);
-        photoView.setImageBitmap(bitmap);
-       /* // Get the dimensions of the View
+        // Get the dimensions of the View
         int targetW = photoView.getWidth();
         int targetH = photoView.getHeight();
 
@@ -107,6 +99,7 @@ public class MainActivity extends AppCompatActivity{
         bmOptions.inPurgeable = true;
 
         Bitmap bitmap = BitmapFactory.decodeFile(currentPhotoPath, bmOptions);
-        photoView.setImageBitmap(bitmap);*/
+        photoView.setImageBitmap(bitmap);
     }
+
 }
