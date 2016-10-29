@@ -1,6 +1,8 @@
 package com.example.embebidos.viewdit;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -20,7 +22,7 @@ public class MainActivity extends AppCompatActivity{
     private static final int REQUEST_IMAGE_CAPTURE = 1;
     private Button cameraButton;
     private ImageView photoView;
-    private String currentPhotoPath;
+    protected String currentPhotoPath;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +48,8 @@ public class MainActivity extends AppCompatActivity{
                         photoFile);
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
                 startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+                //galleryAddPic();
+                //setPic();
             }
         }
     }
@@ -64,21 +68,36 @@ public class MainActivity extends AppCompatActivity{
         return image;
     }
 
-    /*@Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-            Bundle extras = data.getExtras();
-            Bitmap imageBitmap = (Bitmap) extras.get("data");
-            photoView.setImageBitmap(imageBitmap);
-            //  Drawable imagen = (Drawable) extras.get("data");
-            //ImageView.ScaleType imagen = (ImageView.ScaleType) extras.get("data");
-            //ImageView imagen = (ImageView) extras.get("data");
-            //view.setScaleType(imagen);
-            //view.setImageDrawable(imagen);
-            //view.setScaleType(center);
-        }
+    /*private void galleryAddPic() {
+        Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+        File fileN = new File(currentPhotoPath);
+        Uri contentUri = Uri.fromFile(fileN);
+        mediaScanIntent.setData(contentUri);
+        this.sendBroadcast(mediaScanIntent);
+    }
+
+    private void setPic() {
+        // Get the dimensions of the View
+        int targetW = photoView.getWidth();
+        int targetH = photoView.getHeight();
+
+        // Get the dimensions of the bitmap
+        BitmapFactory.Options bmOptions = new BitmapFactory.Options();
+        bmOptions.inJustDecodeBounds = true;
+        BitmapFactory.decodeFile(currentPhotoPath, bmOptions);
+        int photoW = bmOptions.outWidth;
+        int photoH = bmOptions.outHeight;
+
+        // Determine how much to scale down the image
+        int scaleFactor = Math.min(photoW/targetW, photoH/targetH);
+
+        // Decode the image file into a Bitmap sized to fill the View
+        bmOptions.inJustDecodeBounds = false;
+        bmOptions.inSampleSize = scaleFactor;
+        bmOptions.inPurgeable = true;
+
+        Bitmap bitmap = BitmapFactory.decodeFile(currentPhotoPath, bmOptions);
+        photoView.setImageBitmap(bitmap);
     }*/
-
-
 
 }
